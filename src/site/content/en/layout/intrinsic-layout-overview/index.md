@@ -4,12 +4,6 @@ title: Overview
 authors:
   - adamargyle
 description: A introduction article that sets up the tasks and goals of the guide
-tags:
-- Layout
-- Design
-- CSS
-web_lighthouse: N/A
-date: 2019-03-05
 ---
 
 # Introduction to Intrinsic Layout

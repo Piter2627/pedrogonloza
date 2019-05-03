@@ -1,19 +1,12 @@
 ---
-page_type: guide
+layout: post
 title: Featured Card
-author: adamargyle
+authors:
+  - adamargyle
 description:
-tags:
-- Layout
-- Design
-- CSS
-web_lighthouse: N/A
-web_updated_on:
-web_published_on:
-wf_blink_components: Blink>Accessibility
+codelabs:
+  - codelab-build-a-resilient-card
 ---
-
-# Featured Card
 
 <figure style="text-align:center; margin: 4rem 0;">
   <img src="card.png" alt="">
@@ -27,7 +20,7 @@ Alright, **enough reading**, time for you to apply some of this stuff and play. 
 
 <br>
 
-##### We're changing things up a bit!
+## We're changing things up a bit!
 ![pitching world series GIF by Looney Tunes](https://media3.giphy.com/media/3o6vXPav5CAw9rGmGY/giphy.gif?cid=3640f6095c955847366c622f49514b88)
 
 > Bugs throwing a change up… in case the meme didnt make sense lol

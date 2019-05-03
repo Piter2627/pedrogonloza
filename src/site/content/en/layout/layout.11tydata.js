@@ -18,7 +18,7 @@ module.exports = {
           'intrinsic-layout-grouped-listview',
           'intrinsic-layout-chip-card',
           'intrinsic-layout-mural-card',
-          'intrinsic-layout-card',
+          'intrinsic-layout-featured-card',
           'intrinsic-layout-summary',
         ],
       },
