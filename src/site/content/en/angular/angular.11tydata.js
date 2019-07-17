@@ -22,8 +22,9 @@ module.exports = {
       {
         title: 'Fast',
         pathItems: [
-          'performance-budgets-with-the-angular-cli',
+          'route-level-code-splitting',
           'route-preloading',
+          'performance-budgets-with-the-angular-cli',
           'faster-change-detection',
         ],
       },
