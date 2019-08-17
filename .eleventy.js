@@ -40,6 +40,7 @@ const Hero = require(`./${componentsDir}/Hero`);
 const Instruction = require(`./${componentsDir}/Instruction`);
 const PathCard = require(`./${componentsDir}/PathCard`);
 const PostCard = require(`./${componentsDir}/PostCard`);
+const RelatedContent = require(`./${componentsDir}/RelatedContent`);
 const YouTube = require(`./${componentsDir}/YouTube`);
 
 const collectionsDir = 'src/site/_collections';
@@ -138,6 +139,7 @@ module.exports = function(config) {
   config.addShortcode('Instruction', Instruction);
   config.addShortcode('PathCard', PathCard);
   config.addShortcode('PostCard', PostCard);
+  config.addShortcode('RelatedContent', RelatedContent);
   config.addShortcode('ShareAction', ShareAction);
   config.addShortcode('SubscribeAction', SubscribeAction);
   config.addShortcode('YouTube', YouTube);

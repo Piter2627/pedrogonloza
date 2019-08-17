@@ -15,6 +15,7 @@
  */
 
 const stripLanguage = require('../_filters/strip-language');
+const {postToPathMap} = require('../_utils/post-to-path-map');
 
 // Generate a JSON object which links posts to their Ligthhouse audits.
 module.exports = (posts) => {
@@ -25,7 +26,7 @@ module.exports = (posts) => {
   }
 
   const guides = posts.map((post) => {
-    const out = {
+    const guide = {
       path: '',
       topic: '',
       id: post.fileSlug, // e.g. "test-post"
@@ -34,16 +35,21 @@ module.exports = (posts) => {
       url: stripLanguage(post.url),
     };
 
-    const host = post.data.postHost[out.id];
-    if (!host) {
-      // TODO(samthor): This guide isn't included anywhere inside
+    const result = postToPathMap[post.fileSlug];
+    if (!result) {
+      // TODO(samthor): The post isn't included anywhere inside
       // `_data/paths/*.js`, so it can't be given a path or topic.
-      return out;
+      return guide;
     }
 
-    out.path = host.path;
-    out.topic = host.topic;
-    return out;
+    // It's possible that a post may be in more than one path,
+    // for example, LH reuses some a11y audits in the SEO section.
+    // When this happens, just return the first result.
+    // This is a temporary solution until we switch over to using the
+    // full LH report in our /measure page.
+    guide.path = result.paths[0].title;
+    guide.topic = result.topics[0].title;
+    return guide;
   });
 
   return {guides};

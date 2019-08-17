@@ -25,23 +25,25 @@ const data = require('../content/en/learn/learn.11tydata.js');
 //
 // =============================================================================
 
-module.exports = function() {
-  const out = {};
+const postToPathMap = {};
 
-  const paths = data.learn.paths;
-  paths.forEach((path) => {
-    path.topics.forEach((topic) => {
-      (topic.pathItems || []).forEach((id) => {
-        if (id in out) {
-          // TODO(samthor): Warn that a guide is in multiple locations?
-        }
-        out[id] = {
-          path: path.title,
-          topic: topic.title,
-        };
-      });
+const paths = data.learn.paths;
+paths.forEach((path) => {
+  path.topics.forEach((topic) => {
+    (topic.pathItems || []).forEach((slug) => {
+      if (slug in postToPathMap) {
+        const post = postToPathMap[slug];
+        post.paths.push(path);
+        post.topics.push(topic);
+        return;
+      }
+      return postToPathMap[slug] = {
+        paths: [path],
+        topics: [topic],
+      };
     });
   });
+});
 
-  return out;
-};
+
+module.exports = {postToPathMap};
