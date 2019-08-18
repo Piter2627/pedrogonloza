@@ -17,6 +17,7 @@
 const {html} = require('common-tags');
 const {findBySlug} = require('../../_filters/find-by-slug');
 const {postToPathMap} = require('../../_utils/post-to-path-map');
+const ArticleNavigation = require('../components/ArticleNavigation');
 const PathCard = require('../components/PathCard');
 const PostCard = require('../components/PostCard');
 
@@ -99,22 +100,33 @@ function renderPostCard(slug) {
  * This should return PathCards first, if the post is part of a path.
  * Followed by the PostCards for previous and next items, if the post is part of
  * a topic.
+ * If the post is a blog post it will render a back button to return to /blog.
  *
- * TODO:
- * If the post is only in the blog (not part of a path or topics), this should
- * return other posts with similar tags. Because we don't have a powerful tag
- * search engine we'll leave this as a TODO for now. In the future we might
- * use something like Algolia to do a combination NLP + tag search.
+ * TODO(robdodson):
+ * In the future we might use something like Algolia to do a combination NLP +
+ * tag search.
  * https://www.algolia.com/doc/guides/managing-results/refine-results/filtering/how-to/filter-by-tags/?language=javascript
+ * Another option would be to use Lodash's intersection method to create a map
+ * of posts with intersecting tags.
+ * https://lodash.com/docs/4.17.15#intersection
+ * We would need to render this map to a static file before doing builds.
+ * Otherwise the cost of doing a build will probably get out of hand.
  * @param {string} slug A post slug.
  * @return {string}
  */
 module.exports = (slug) => {
   const result = postToPathMap[slug];
+  // If the post didn't exist in the path map then it's a blog post that doesn't
+  // belong to any paths.
+  // In this scenario, just render a back button to return to /blog.
   if (!result) {
-    // bail because this is a blog post
-    return;
+    return ArticleNavigation({
+      back: '/blog',
+      backLabel: 'Return to all articles',
+    });
   }
+
+  //
   const {paths, topics} = result;
   const recommendedPaths = recommendPaths(paths);
   const recommendedTopics = recommendTopics(topics, slug);
@@ -125,7 +137,7 @@ module.exports = (slug) => {
   return html`
     <section class="w-grid w-related-content">
       <div class="w-grid__columns w-grid__columns--gapless w-grid__columns--three">
-        <h3 id="related-content" class="w-learn-heading">
+        <h3 id="related-content" class="w-headline--indented">
           Related content
           <a class="w-headline-link" href="#related-content" aria-hidden="true">#</a>
         </h3>

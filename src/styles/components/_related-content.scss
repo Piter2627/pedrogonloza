@@ -9,9 +9,9 @@
 // =============================================================================
 
 .w-related-content {
-  padding-top: 64px;
-  border-top: 1px solid $GREY_300;
   border-bottom: 1px solid $GREY_300;
+  border-top: 1px solid $GREY_300;
+  padding-top: 64px;
 
   @include bp(md) {
     padding-top: 96px;

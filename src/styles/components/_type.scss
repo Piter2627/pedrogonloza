@@ -65,3 +65,9 @@
 .w-eyebrow {
   @include font($EYEBROW);
 }
+
+// Pad the heading a bit so it lines up with the post/path cards.
+.w-headline--indented {
+  margin-top: 0;
+  padding-left: 32px;
+}

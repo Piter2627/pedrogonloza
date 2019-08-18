@@ -20,6 +20,10 @@
   @include bp(sm) {
     flex-direction: row;
   }
+
+  @include bp(md) {
+    margin-bottom: 32px;
+  }
 }
 
 .w-article-navigation__link {
@@ -84,25 +88,4 @@
   @include bp(sm) {
     margin: 0;
   }
-}
-
-.w-article-navigation__link--forward {
-  flex: 1;
-  font-size: 24px;
-  justify-content: flex-end;
-  padding: 32px 80px 32px 32px;
-}
-
-.w-article-navigation__link--forward::before {
-  content: 'arrow_forward';
-  position: absolute;
-  right: 32px;
-}
-
-.w-article-navigation__column {
-  text-align: right;
-}
-
-.w-article-navigation__heading {
-  margin: 0 0 4px;
 }
