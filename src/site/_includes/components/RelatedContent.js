@@ -91,7 +91,7 @@ function renderPathCard(path) {
 
 function renderPostCard(slug) {
   const post = findBySlug(slug);
-  return html`${PostCard({post})}`;
+  return html`${PostCard({post, showInfo: true})}`;
 }
 
 /**

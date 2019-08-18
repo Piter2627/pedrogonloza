@@ -21,12 +21,61 @@ const contributors = require('../../_data/contributors.json');
 
 /* eslint-disable require-jsdoc,indent,max-len */
 
+function renderUpdate(date) {
+  return html`
+    <li
+      class="w-post-card__info-listitem w-post-card__info-listitem--updated"
+    >
+      Updated <time>${prettyDate(date)}</time>
+    </li>
+  `;
+}
+
+function renderInfo(data) {
+  return html`
+    <div class="w-post-card__info">
+      <ul class="w-post-card__info-list">
+        <li
+          class="w-post-card__info-listitem w-post-card__info-listitem--category"
+        >
+          Article
+        </li>
+        ${data.updated && renderUpdate(data.updated)}
+      </ul>
+    </div>
+  `;
+}
+
+function renderThumbnail(url, img, alt) {
+  return html`
+    <figure class="w-post-card__figure">
+      <img class="w-post-card__image" src="${url + img}" alt="${alt}" />
+    </figure>
+  `;
+}
+
+function renderAuthors(authors) {
+  function getFullName(id) {
+    const {name} = contributors[id];
+    return `${name.given} ${name.family}`;
+  }
+  let authorString;
+  if (authors.length === 1) {
+    authorString = getFullName(authors[0]);
+  } else if (authors.length === 2) {
+    authorString = `${getFullName(authors[0])} & ${getFullName(authors[1])}`;
+  }
+  return html`
+    <div class="w-post-card__author">${authorString}</div>
+  `;
+}
+
 /**
  * PostCard used to preview posts.
  * @param {Object} post An eleventy collection item with post data.
  * @return {string}
  */
-module.exports = ({post}) => {
+module.exports = ({post, showInfo = false}) => {
   const url = stripLanguage(post.url);
   const data = post.data;
 
@@ -35,33 +84,10 @@ module.exports = ({post}) => {
   const thumbnail = data.thumbnail || data.hero || null;
   const alt = data.alt || '';
 
-  function renderThumbnail(url, img, alt) {
-    return html`
-      <figure class="w-post-card__figure">
-        <img class="w-post-card__image" src="${url + img}" alt="${alt}" />
-      </figure>
-    `;
-  }
-
-  function renderAuthors(authors) {
-    function getFullName(id) {
-      const {name} = contributors[id];
-      return `${name.given} ${name.family}`;
-    }
-    let authorString;
-    if (authors.length === 1) {
-      authorString = getFullName(authors[0]);
-    } else if (authors.length === 2) {
-      authorString = `${getFullName(authors[0])} & ${getFullName(authors[1])}`;
-    }
-    return html`
-      <div class="w-post-card__author">${authorString}</div>
-    `;
-  }
-
   return html`
     <a href="${url}" class="w-card">
       <article class="w-post-card">
+        ${showInfo && renderInfo(data)}
         <div
           class="w-post-card__cover ${thumbnail && `w-post-card__cover--with-image`}"
         >
