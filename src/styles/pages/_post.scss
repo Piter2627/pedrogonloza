@@ -7,19 +7,11 @@
 }
 // sass-lint:enable class-name-format
 
-.w-post-breadcrumbs {
-  padding: 32px 32px 0;
+.w-post-content {
+  padding-bottom: 64px;
 
   @include bp(md) {
-    padding: 32px 32px 24px;
-  }
-}
-
-.w-post-content {
-  margin-bottom: 64px;
-
-  @include bp(sm) {
-    margin-bottom: 160px;
+    padding-bottom: 96px;
   }
 }
 

@@ -1,0 +1,19 @@
+@import '../settings/colors';
+@import '../tools/breakpoints';
+
+// =============================================================================
+// RELATED CONTENT OVERVIEW
+//
+// Related content appears at the bottom of any post.
+//
+// =============================================================================
+
+.w-related-content {
+  padding-top: 64px;
+  border-top: 1px solid $GREY_300;
+  border-bottom: 1px solid $GREY_300;
+
+  @include bp(md) {
+    padding-top: 96px;
+  }
+}

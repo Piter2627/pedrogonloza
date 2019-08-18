@@ -123,7 +123,7 @@ module.exports = (slug) => {
   output = output.splice(0, 3);
 
   return html`
-    <section class="w-grid">
+    <section class="w-grid w-related-content">
       <div class="w-grid__columns w-grid__columns--gapless w-grid__columns--three">
         <h3 id="related-content" class="w-learn-heading">
           Related content

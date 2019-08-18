@@ -11,10 +11,10 @@
 // =============================================================================
 
 .w-article-header {
-  margin: 0 0 48px;
+  margin: 16px 0 48px;
 
   @include bp(md) {
-    margin: 0 0 64px;
+    margin: 24px 0 64px;
   }
 }
 
