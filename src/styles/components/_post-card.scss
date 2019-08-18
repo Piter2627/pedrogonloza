@@ -84,6 +84,26 @@
   }
 }
 
+.w-post-card__byline {
+  margin-bottom: 24px;
+}
+
+.w-post-card__author,
+.w-post-card__published {
+  display: block;
+  font-size: 14px;
+  font-style: normal;
+  line-height: 20px;
+}
+
+.w-post-card__author {
+  color: $GREY_900;
+}
+
+.w-post-card__published {
+  color: $GREY_700;
+}
+
 .w-post-card__info-list {
   height: 36px;
   list-style: none;

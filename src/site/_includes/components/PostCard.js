@@ -16,6 +16,8 @@
 
 const {html} = require('common-tags');
 const stripLanguage = require('../../_filters/strip-language');
+const prettyDate = require('../../_filters/pretty-date');
+const contributors = require('../../_data/contributors.json');
 
 /* eslint-disable require-jsdoc,indent,max-len */
 
@@ -41,20 +43,21 @@ module.exports = ({post}) => {
     `;
   }
 
-  // function renderAuthors(authors) {
-  //   return html`
-  //     <div class="w-authors">
-  //       ${authors.map((author) => {
-  //         return `${Author({
-  //           post,
-  //           author: contributors[author],
-  //           avatar: author,
-  //           small: true,
-  //         })}`;
-  //       })}
-  //     </div>
-  //   `;
-  // }
+  function renderAuthors(authors) {
+    function getFullName(id) {
+      const {name} = contributors[id];
+      return `${name.given} ${name.family}`;
+    }
+    let authorString;
+    if (authors.length === 1) {
+      authorString = getFullName(authors[0]);
+    } else if (authors.length === 2) {
+      authorString = `${getFullName(authors[0])} & ${getFullName(authors[1])}`;
+    }
+    return html`
+      <div class="w-post-card__author">${authorString}</div>
+    `;
+  }
 
   return html`
     <a href="${url}" class="w-card">
@@ -73,6 +76,10 @@ module.exports = ({post}) => {
           
         </div>
         <div class="w-post-card__desc">
+          <div class="w-post-card__byline">
+            ${data.authors && renderAuthors(data.authors)}
+            <div class="w-post-card__published">${prettyDate(data.date)}</div>
+          </div>
           <p class="w-post-card__subhead">
             ${data.subhead}
           </p>
