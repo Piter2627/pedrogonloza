@@ -116,7 +116,6 @@ module.exports = (slug) => {
     return;
   }
   const {paths, topics} = result;
-  debugger;
   const recommendedPaths = recommendPaths(paths);
   const recommendedTopics = recommendTopics(topics, slug);
   let output = [...recommendedPaths, ...recommendedTopics];

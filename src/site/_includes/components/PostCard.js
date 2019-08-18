@@ -107,7 +107,7 @@ module.exports = ({post, showInfo = false}) => {
             <div class="w-post-card__published">${prettyDate(data.date)}</div>
           </div>
           <p class="w-post-card__subhead">
-            ${data.subhead}
+            ${data.subhead || data.description}
           </p>
         </div>
       </article>

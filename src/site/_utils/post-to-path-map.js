@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const data = require('../content/en/learn/learn.11tydata.js');
+const data = require('../content/en/learn/learn.11tydata.js').learn;
 
 // =============================================================================
 // POST HOST
@@ -27,7 +27,7 @@ const data = require('../content/en/learn/learn.11tydata.js');
 
 const postToPathMap = {};
 
-const paths = data.learn.paths;
+const paths = [...data.paths, ...data.frameworks, ...data.audits];
 paths.forEach((path) => {
   path.topics.forEach((topic) => {
     (topic.pathItems || []).forEach((slug) => {
