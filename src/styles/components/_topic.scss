@@ -14,12 +14,12 @@ $TOPIC_SPACING_SIZE_MEDIUM: 40px;
 $TOPIC_SPACING_SIZE_SMALL: 32px;
 
 .w-topic {
-  border-bottom: 1px solid $WEB_PRIMARY_COLOR;
+  border-bottom: 1px solid $BORDER_COLOR;
 }
 
 .w-topic__header {
   align-items: center;
-  color: $WEB_PRIMARY_COLOR;
+  color: $WEB_EXTENDED_TERTIARY_COLOR;
   display: flex;
   margin-left: $TOPIC_SPACING_SIZE_SMALL;
   overflow: visible;
