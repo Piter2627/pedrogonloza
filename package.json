@@ -115,7 +115,7 @@
     "unist-util-map": "^1.0.5",
     "unist-util-to-list-of-char": "^0.1.2",
     "unist-util-visit": "^1.4.1",
-    "yaml-front-matter": "^4.0.0"
+    "yaml-front-matter": "^4.1.0"
   },
   "optionalDependencies": {
     "node-sass": "^4.12.0"
