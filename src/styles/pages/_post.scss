@@ -15,14 +15,6 @@
   }
 }
 
-.w-post-content {
-  margin-bottom: 64px;
-
-  @include bp(sm) {
-    margin-bottom: 160px;
-  }
-}
-
 .w-post-github-link {
   color: $GREY_700;
   font-size: .875em;

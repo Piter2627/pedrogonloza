@@ -1,0 +1,16 @@
+.w-toc {
+  display: flex;
+  justify-content: flex-end;
+  // Because position sticky works like position relative, we need to remove
+  // the white space created by this element and its padding.
+  margin-top: -66px;
+  padding-bottom: 24px;
+  padding-right: 24px;
+  position: sticky;
+  top: 88px;
+}
+
+.w-toc__button {
+  height: auto;
+  padding: 8px;
+}
