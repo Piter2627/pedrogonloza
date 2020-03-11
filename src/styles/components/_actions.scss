@@ -14,12 +14,8 @@ $W_FAB_LARGE_RADIUS: 28px;
 
 .w-actions {
   align-items: flex-end;
-  bottom: 24px;
   display: flex;
   flex-direction: column;
-  position: fixed;
-  right: 24px;
-  z-index: 100;
 }
 
 .w-actions__fab {

@@ -4,9 +4,8 @@
 
   <div class="w-toc">
     <button class="w-toc__button w-button w-button--secondary w-button--icon" data-icon="toc"></button>
+    <web-actions actions="share|subscribe" authors="{{ authors | expandContributors | join('|') }}"></web-actions>
   </div>
-
-  <web-actions actions="share|subscribe" authors="{{ authors | expandContributors | join('|') }}"></web-actions>
 
   {% if hero %}
     {% Hero {
