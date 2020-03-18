@@ -126,6 +126,7 @@ class Search extends BaseElement {
 
       // This is intentionally NOT "site:web.dev", as users can have a broader
       // result set that way. We tend to come up first regardless.
+      // We set tabindex=-1 in the same way as we do for search results.
       const query = "web.dev " + this.query.trim();
       const searchUrl =
         "https://google.com/search?q=" + window.encodeURIComponent(query);
@@ -138,6 +139,7 @@ class Search extends BaseElement {
               data-label="search, open Google"
               data-action="click"
               target="_blank"
+              tabindex="-1"
               href=${searchUrl}
             >
               Google search
