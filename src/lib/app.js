@@ -12,7 +12,6 @@ import './analytics'; // side effects
 import {swapContent, getPartial} from './loader';
 import * as router from './utils/router';
 import {store} from './store';
-import {localStorage} from './utils/storage';
 import removeServiceWorkers from './utils/sw-remove';
 
 WebComponents.waitFor(async () => {
