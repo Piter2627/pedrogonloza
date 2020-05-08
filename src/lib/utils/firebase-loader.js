@@ -2,12 +2,14 @@
  * @fileoverview Dynamic loading code for Firebase and libraries.
  */
 
+import {firebaseVersion} from 'webdev_config';
+
 /**
  * @type {!Object<!Promise>}
  */
 const libs = {};
 
-const firebasePrefix = '//www.gstatic.com/firebasejs/6.6.1';
+const firebasePrefix = '//www.gstatic.com/firebasejs/' + firebaseVersion;
 
 /**
  * Loads the specific Firebase library (or returns the previous cached load).
@@ -42,4 +44,23 @@ function internalLoad(library) {
  */
 export default function loadFirebase(...names) {
   return Promise.all(names.map(internalLoad));
+}
+
+/**
+ * Builds a loader function which performs an operation after the relevant
+ * libraries have loaded.
+ *
+ * @template T
+ * @param {!Array<string>} names to load
+ * @param {function(): T=} handler
+ * @return {function(): !Promise<T>}
+ */
+export function buildLoader(names, handler = () => {}) {
+  let p;
+  return () => {
+    if (!p) {
+      p = loadFirebase(...names).then(handler);
+    }
+    return p;
+  };
 }

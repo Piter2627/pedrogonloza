@@ -57,6 +57,7 @@ const virtualImports = {
         .replace(/[\D]/g, '')
         .slice(0, 12),
     firebaseConfig: isProd ? site.firebase.prod : site.firebase.staging,
+    firebaseVersion: '7.14.2',
   },
   webdev_entrypoint: null,
 };

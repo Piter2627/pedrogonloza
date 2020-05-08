@@ -60,6 +60,7 @@ module.exports = {
       messagingSenderId: '1051961234704',
       appId: '1:1051961234704:web:d706ff04eb3dc39d128195',
       measurementId: 'G-RY6ENK9E06',
+      vapidKey: 'TODO',
     },
     staging: {
       apiKey: 'AIzaSyCc27LkiT_ZvmEszthj__edZEzB7B7976s',
@@ -69,6 +70,8 @@ module.exports = {
       storageBucket: 'web-dev-staging.appspot.com',
       messagingSenderId: '950800540990',
       appId: '1:950800540990:web:5bfeb5de58f8ce7ceef86f',
+      vapidKey:
+        'BC5vg6lkEbLr2kmO_46ntMXy1ny5i2Oycwx4I4lJPdM_bkjHpF1_LIe6OvrvYy17CEVmyYBVPBbppXXRdhWNOGo',
     },
   },
 };

@@ -12,8 +12,12 @@ const initialState = {
   checkingSignedInState: true,
 
   // The user has successfully signed in; default to cached value to help prevent FOUC
-  isSignedIn: Boolean(localStorage['webdev_isSignedIn']),
+  isSignedIn: false,
   user: null,
+
+  // Firebase Messaging Subscription updates and information.
+  hasRegisteredMessaging: false,
+  pendingMessagingUpdate: false,
 
   // The most recent URL measured and the Date when it was first analyzed by the user.
   userUrlSeen: null,
@@ -51,11 +55,25 @@ const initialState = {
   snackbarType: null,
 };
 
+// These keys are mirrored to localStorage as they need to be retained, as Boolean only for now,
+// across user sessions.
+const mirrorToLocalStorage = ['isSignedIn', 'hasRegisteredMessaging'];
+mirrorToLocalStorage.forEach((key) => {
+  initialState[key] = Boolean(localStorage[`webdev_${key}`]);
+});
+
 let store;
 if (isProd) {
   store = createStore(initialState);
 } else {
   store = devtools(createStore(initialState));
 }
+
+// Update localStorage with mirrored keys.
+store.subscribe((state) => {
+  mirrorToLocalStorage.forEach((key) => {
+    localStorage[`webdev_${key}`] = state[key];
+  });
+});
 
 export {store};

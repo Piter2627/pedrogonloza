@@ -48,22 +48,20 @@ function onGlobalStateChanged({isSignedIn, isPageLoading}) {
   } else {
     main.removeAttribute('aria-busy');
   }
-
-  // Cache whether the user was signed in, to help prevent FOUC in future and
-  // for Analytics, as this can be read synchronosly and Firebase's auth takes
-  // ~ms to arrive.
-  localStorage['webdev_isSignedIn'] = isSignedIn ? 'probably' : '';
 }
 store.subscribe(onGlobalStateChanged);
 onGlobalStateChanged(store.getState());
 
 // Ensure/update the Service Worker, or remove it if unsupported (this should
 // never happen here unless the valid domains change, but left in for safety).
-if (serviceWorkerIsSupported(window.location.hostname)) {
-  ensureServiceWorker();
-} else {
-  removeServiceWorkers();
-}
+// This is awkardly an export so it can be read by Firebase Cloud Messaging.
+const registerCatchHandler = (err) => {
+  console.warn('sw register err', err);
+  return null;
+};
+export const serviceWorker = serviceWorkerIsSupported(window.location.hostname)
+  ? ensureServiceWorker().catch(registerCatchHandler)
+  : Promise.resolve(removeServiceWorkers()).then(null);
 
 function serviceWorkerIsSupported(hostname) {
   // Allow local/prod as well as .netlify staging deploy target.
@@ -74,6 +72,9 @@ function serviceWorkerIsSupported(hostname) {
   );
 }
 
+/**
+ * @return {!Promise<!ServiceWorkerRegistration>}
+ */
 function ensureServiceWorker() {
   const ensurePartialCache = (isFirstInstall = false) => {
     const {pathname} = window.location;
@@ -107,5 +108,6 @@ function ensureServiceWorker() {
       window.location.reload();
     });
   }
-  navigator.serviceWorker.register('/sw.js');
+
+  return navigator.serviceWorker.register('/sw.js');
 }

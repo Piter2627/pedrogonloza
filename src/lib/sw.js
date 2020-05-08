@@ -13,6 +13,7 @@ import {ExpirationPlugin} from 'workbox-expiration';
 import {matchPrecache, precacheAndRoute} from 'workbox-precaching';
 import {cacheNames} from 'workbox-core';
 import {matchSameOriginRegExp} from './utils/sw-match.js';
+import {configureFirebase} from './utils/sw-firebase.js';
 
 /**
  * Configure default cache for standard web.dev files: the offline page, various images, etc.
@@ -248,4 +249,8 @@ async function offlinePartial() {
     );
   }
   return cachedResponse;
+}
+
+if (true) {
+  configureFirebase();
 }

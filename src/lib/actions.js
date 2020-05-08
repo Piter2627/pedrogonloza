@@ -1,5 +1,10 @@
 import {store} from './store';
-import {saveUserUrl} from './fb';
+import {
+  saveUserUrl,
+  messagingPromiseLoader,
+  updateSubscription,
+  silentGetMessagingToken,
+} from './fb';
 import {runLighthouse, fetchReports} from './lighthouse-service';
 import {localStorage} from './utils/storage';
 
@@ -16,6 +21,51 @@ export const clearSignedInState = store.action(() => {
       lighthouseError: null,
     };
   }
+});
+
+export const configureMessagingSubscription = store.action((state, enabled) => {
+  return Promise.resolve().then(async () => {
+    const existingToken = await silentGetMessagingToken();
+    let token;
+
+    if (state.pendingMessagingUpdate) {
+      return false; // do nothing, active
+    }
+
+    store.setState({
+      pendingMessagingUpdate: true,
+    });
+
+    try {
+      do {
+        if (!enabled) {
+          break; // not enabled, don't request a new token
+        }
+
+        const messaging = await messagingPromiseLoader();
+        if (messaging === null) {
+          break; // messaging not available for some reason (no SW?)
+        }
+
+        try {
+          token = await messaging.getToken();
+        } catch (err) {
+          // probably a permission error, fail
+          console.warn('failed to get token', err);
+          token = null;
+        }
+      } while (false);
+
+      token = token || null;
+      const hasRegisteredMessaging = token !== null;
+
+      const update = await updateSubscription(token, existingToken);
+      store.setState({hasRegisteredMessaging});
+      return update;
+    } finally {
+      store.setState({pendingMessagingUpdate: false});
+    }
+  });
 });
 
 export const requestRunLighthouse = store.action((state, url) => {

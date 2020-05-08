@@ -1,32 +1,59 @@
 import {firebaseConfig} from 'webdev_config';
 import {store} from './store';
-import {clearSignedInState} from './actions';
-import loadFirebase from './utils/firebase-loader';
+import {clearSignedInState, configureMessagingSubscription} from './actions';
+import {buildLoader} from './utils/firebase-loader';
 import {trackError} from './analytics';
+import {serviceWorker} from './app';
 
-const firebasePromise = loadFirebase('app', 'auth', 'performance').then(
-  () => window.firebase,
-);
+const firebasePromise = buildLoader(['app', 'auth', 'performance'], () => {
+  return window.firebase;
+})();
 firebasePromise.then(initialize).catch((err) => {
   console.error('failed to load Firebase', err);
   trackError(err, 'firebase load');
 });
 
-const firestorePromiseLoader = (() => {
-  let p;
-  return () => {
-    if (p) {
-      return p;
-    }
-    // We don't have to block on the top-level Promise, as the scripts run
-    // in-order of being added to the page (async=false).
-    p = loadFirebase('firestore').then(() => {
-      const firestore = window.firebase.firestore();
-      return firestore;
+const firestorePromiseLoader = buildLoader(['firestore'], () => {
+  return window.firebase.firestore();
+});
+
+export const messagingPromiseLoader = buildLoader(['messaging'], async () => {
+  if (!window.firebase.messaging.isSupported()) {
+    return null;
+  }
+  const registration = await serviceWorker;
+  if (!registration) {
+    return null; // messaging makes no sense without a registered SW
+  }
+
+  const messaging = window.firebase.messaging();
+
+  messaging.useServiceWorker(registration);
+  messaging.usePublicVapidKey(firebaseConfig.vapidKey);
+
+  messaging.onTokenRefresh(() => {
+    // This should always succeed, because we've literally just been told there's a new token.
+    // TODO(samthor): This is racey. If a previous update is in progress right now, this will
+    // return immediately and never update the token.
+    const {hasRegisteredMessaging} = store.getState();
+    configureMessagingSubscription(hasRegisteredMessaging).catch((err) => {
+      // A failure in the action _should_ result in messaging just being disabled.
+      console.error('token refresh failed to update', err);
+      trackError(err, 'token refresh');
     });
-    return p;
-  };
-})();
+  });
+
+  return messaging;
+});
+
+// If the initial state indicates messaging was already configured, fetch the library and subscribe
+// to token changes. This could just look at `Notification.permission`, but we don't want to fetch
+// this if the user has e.g. enabled then disabled notifications.
+if (store.getState().hasRegisteredMessaging) {
+  messagingPromiseLoader();
+}
+// TODO(samthor): We should ask for `silentGetMessagingToken()` here to confirm 'hasRegisteredMessaging'.
+// We can match it against the user's snapshot to confirm whether it's correct.
 
 function initialize(firebase) {
   firebase.initializeApp(firebaseConfig);
@@ -40,10 +67,16 @@ function initialize(firebase) {
 
     // We expect the user snapshot to look like:
     // {
-    //   currentUrl: String,         # current URL saved to Firestore
-    //   urls: {String: Timestamp},  # URL to first time used (including current URL)
+    //   currentUrl: String,          # current URL saved to Firestore
+    //   urls: {String: Timestamp},   # URL to first time used (including current URL)
+    //   cron: boolean,               # whether the user wants notifications
+    //   tokens: {String: Timestamp}, # token to last time used
     // }
     const data = snapshot.data() || {}; // is empty on new user
+
+    // TODO(samthor): Use PushSubscription (rather than the _whole_ messaging library) to work out
+    // whether we had a previous subscription.
+
     const savedUrl = data.currentUrl || '';
 
     const {userUrl, userUrlSeen, activeLighthouseUrl} = store.getState();
@@ -150,6 +183,45 @@ async function userRef() {
 }
 
 /**
+ * Updates the user's row in Firestore with a new subscription token for this device. This may
+ * optionally also delete the user's previous token.
+ *
+ * @param {?string} token
+ * @param {?string=} existingToken
+ * @return {boolean} whether a change was made
+ */
+export async function updateSubscription(token, existingToken = null) {
+  const ref = await userRef();
+  if (!ref) {
+    return false;
+  }
+  token = token || null;
+  existingToken = existingToken || null;
+
+  const update = [];
+
+  if (token) {
+    update.push(
+      new firebase.firestore.FieldPath(['token', token]),
+      firebase.firestore.FieldValue.serverTimestamp(),
+    );
+  }
+  if (existingToken && existingToken !== token) {
+    // Firestore won't let us pass e.g. {tokens: {[token]: deleteFieldValue}}.
+    update.push(
+      new firebase.firestore.FieldPath(['token', existingToken]),
+      firebase.firestore.FieldValue.delete(),
+    );
+  }
+
+  if (update.length) {
+    // TODO: handle timeout?
+    await ref.update(update);
+  }
+  return change;
+}
+
+/**
  * Updates the user's row in Firestore (if signed in) with an updated URL and optional audit time.
  *
  * @param {string} url to update the user's row with
@@ -203,6 +275,24 @@ export async function saveUserUrl(url, auditedOn = null) {
   }
 
   return auditedOn;
+}
+
+/**
+ * Gets the Firebase Messaging Token, but avoids prompting the user if Notification is not allowed.
+ *
+ * @return {?string}
+ */
+export async function silentGetMessagingToken() {
+  if (Notification.permission !== 'granted') {
+    return null;
+  }
+  const messaging = await messagingPromiseLoader();
+  try {
+    return await messaging.getToken();
+  } catch (e) {
+    // catch error
+    return null;
+  }
 }
 
 /**
