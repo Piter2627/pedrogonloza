@@ -198,27 +198,51 @@ export async function updateSubscription(token, existingToken = null) {
   token = token || null;
   existingToken = existingToken || null;
 
-  const update = [];
+  const updates = [];
 
   if (token) {
-    update.push(
-      new firebase.firestore.FieldPath(['token', token]),
+    updates.push(
+      new firebase.firestore.FieldPath('tokens', token),
       firebase.firestore.FieldValue.serverTimestamp(),
     );
   }
   if (existingToken && existingToken !== token) {
     // Firestore won't let us pass e.g. {tokens: {[token]: deleteFieldValue}}.
-    update.push(
-      new firebase.firestore.FieldPath(['token', existingToken]),
+    updates.push(
+      new firebase.firestore.FieldPath('tokens', existingToken),
       firebase.firestore.FieldValue.delete(),
     );
   }
 
-  if (update.length) {
-    // TODO: handle timeout?
-    await ref.update(update);
+  if (!updates.length) {
+    return false;
   }
-  return change;
+
+  // We need to write something globally helpful that can be indexed on, so ensure that the
+  // 'subscriptions' field is set if the user has any.
+  const firestore = await firestorePromiseLoader();
+  await firestore.runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(ref);
+    const data = snapshot.data() || {};
+    data.tokens = data.tokens || {};
+
+    if (existingToken && existingToken !== token) {
+      delete data.tokens[existingToken];
+    }
+    const hasSubscriptions =
+      Boolean(token) || Object.keys(data.tokens).length > 0;
+    if (data.hasSubscriptions !== hasSubscriptions) {
+      updates.push(
+        'subscription',
+        hasSubscriptions
+          ? firebase.firestore.FieldValue.serverTimestamp()
+          : firebase.firestore.FieldValue.delete(),
+      );
+    }
+
+    return transaction.update(ref, ...updates);
+  });
+  return true;
 }
 
 /**
