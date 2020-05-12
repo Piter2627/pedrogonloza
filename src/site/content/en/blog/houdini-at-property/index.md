@@ -12,7 +12,7 @@ tags:
   - properties and values
   - custom properties
   - chrome 84
-hero: hero.png
+hero: hero-temp.png
 alt: TODO
 ---
 
@@ -124,23 +124,3 @@ It's important to remember that support for this feature is still limited. Howev
   alt="Is Houdini Ready Yet? Website"
   style="height: 450px; width: 100%; border: 1px solid lightgray">
 </iframe>
-
-
-
-
---- END ----
-
-Things you can do here:
-
-
-{% Aside 'success' %} 
-Aside type: success. Woohoo! `Aside 'success'`
-{% endAside %}
-
-{% Aside 'note' %}
-A note aside type. `Aside 'note'`
-{% endAside %}
-
-{% Aside 'gotchas' %}
-A gotcha aside type. `Aside 'gotcha'`
-{% endAside %}
