@@ -870,8 +870,9 @@ const contributors = {
       family: 'Kravets',
     },
     description: {
-      en: 'Developer Advocate for Material Design',
+      en: 'Developer Advocate for Chrome',
     },
+    country: 'US',
     homepage: 'https://una.im/',
     github: 'una',
     twitter: 'una',
