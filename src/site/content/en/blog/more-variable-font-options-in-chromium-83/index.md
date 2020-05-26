@@ -4,6 +4,7 @@ subhead: Catalina brings a new united variable system font to macOS.
 authors:
   - adamargyle
   - drott
+  - bungeman
 description: Chromium 80 had a system-ui font weight regression on macOS. The reason it broke, and the new super powers post-resolution, are worth the wait in Chromium 83.
 date: 2020-05-21
 updated: 2020-05-26
