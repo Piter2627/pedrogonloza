@@ -1176,6 +1176,17 @@ const contributors = {
       name: 'Google',
     },
   },
+  bungeman: {
+    name: {
+      given: 'Ben',
+      family: 'Wagner',
+    },
+    country: 'US',
+    github: '??',
+    org: {
+      name: 'Google',
+    },
+  },
 };
 
 const processedContributors = {};
