@@ -1232,6 +1232,15 @@ const contributors = {
       en: 'Developer Programs Engineer at Google',
     },
   },
+  kevinellis: {
+    name: {
+      given: 'Kevin',
+      family: 'Ellis',
+    },
+    description: {
+      en: 'Software Engineer on the web platform.',
+    },
+  },
 };
 
 const processedContributors = {};
