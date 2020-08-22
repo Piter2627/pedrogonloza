@@ -51,9 +51,9 @@ self.addEventListener('activate', (event) => {
   // Define a list of allowed caches.
   // If a cache does not appear in the list then it will be deleted.
   const p = Promise.resolve().then(async () => {
-    const allowedCaches = new Set(Object.values(workboxCacheNames));
-    const cacheNames = await caches.keys();
-    for (const cacheName of cacheNames) {
+    const allowedCaches = new Set(Object.values(cacheNames));
+    const currentCacheNames = await caches.keys();
+    for (const cacheName of currentCacheNames) {
       if (!allowedCaches.has(cacheName)) {
         await caches.delete(cacheName);
       }
