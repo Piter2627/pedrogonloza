@@ -47,11 +47,11 @@ self.addEventListener('install', (event) => {
   event.waitUntil(self.skipWaiting());
 });
 
-self.addEventListener('activate', () => {
+self.addEventListener('activate', (event) => {
   // Define a list of allowed caches.
   // If a cache does not appear in the list then it will be deleted.
   const p = Promise.resolve().then(async () => {
-    const allowedCaches = new Set(Object.values(cacheNames));
+    const allowedCaches = new Set(Object.values(workboxCacheNames));
     const cacheNames = await caches.keys();
     for (const cacheName of cacheNames) {
       if (!allowedCaches.has(cacheName)) {
